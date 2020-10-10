@@ -91,4 +91,9 @@ public class Profile {
             return new Profile(id, description);
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("Profile{id: %d, description: %s}", this.getId(), this.getDescription());
+    }
 }

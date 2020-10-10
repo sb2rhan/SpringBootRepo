@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.step.SpringBootRepo.dtos.UserDTO;
+import org.step.SpringBootRepo.dtos.UserFullDTO;
 import org.step.SpringBootRepo.entities.User;
 import org.step.SpringBootRepo.services.CrudService;
 
@@ -45,6 +46,13 @@ public class UserController {
         final long userId = Long.parseLong(id);
         final User foundUser = userCrudService.findById(userId);
         return ResponseEntity.ok(new UserDTO(foundUser));
+    }
+
+    @GetMapping("/private/{id}")
+    public ResponseEntity<UserFullDTO> findByIdPrivate(@PathVariable(name = "id") String id) {
+        final long userId = Long.parseLong(id);
+        final User foundUser = userCrudService.findById(userId);
+        return ResponseEntity.ok(new UserFullDTO(foundUser));
     }
 
     @DeleteMapping("/private/{id}")

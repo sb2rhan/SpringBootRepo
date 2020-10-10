@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -69,5 +70,16 @@ public class ProfileRepositoryTest {
                 .build();
 
         final Profile save = profileRepository.save(profile);
+    }
+
+    @Test
+    public void willSortByDescription() {
+        Sort sort = Sort.by("description");
+        final List<Profile> sortedProfiles = profileRepository.findAll(sort);
+
+        Assertions.assertNotNull(sortedProfiles);
+        Assertions.assertFalse(sortedProfiles.isEmpty());
+
+        sortedProfiles.forEach(System.out::println);
     }
 }

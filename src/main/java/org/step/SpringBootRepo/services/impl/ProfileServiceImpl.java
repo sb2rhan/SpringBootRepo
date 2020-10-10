@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.step.SpringBootRepo.entities.Profile;
+import org.step.SpringBootRepo.exceptions.ProfileNotFoundException;
 import org.step.SpringBootRepo.repositories.ProfileRepository;
 import org.step.SpringBootRepo.services.CrudService;
 import org.step.SpringBootRepo.util.DBUtil;
@@ -38,13 +39,16 @@ public class ProfileServiceImpl implements CrudService<Profile, Long> {
     @Override
     @Transactional(readOnly = true)
     public Profile findById(Long id) {
-        return profileRepository.findById(id).orElseThrow(RuntimeException::new);
+        return profileRepository.findById(id)
+                .orElseThrow(() -> new ProfileNotFoundException
+                        (String.format("Profile with id %d was not found", id), id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Profile find(Profile profile) {
-        return profileRepository.findById(profile.getId()).orElseThrow(RuntimeException::new);
+        return profileRepository.findById(profile.getId()).orElseThrow(() -> new ProfileNotFoundException
+                (String.format("Profile with id %d was not found", profile.getId()), profile.getId()));
     }
 
     @Override

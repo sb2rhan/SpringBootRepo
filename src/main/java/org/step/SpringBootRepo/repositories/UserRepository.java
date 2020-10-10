@@ -19,5 +19,7 @@ public interface UserRepository extends CommonRepository<User> {
     })
     void updateUsername(String username, Long id);
 
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM users JOIN authorities a on users.id = a.user_id WHERE username=?1")
     Optional<User> findByUsername(String username);
 }

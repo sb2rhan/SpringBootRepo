@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.step.SpringBootRepo.entities.User;
+import org.step.SpringBootRepo.exceptions.UserNotFoundException;
 import org.step.SpringBootRepo.repositories.UserRepository;
 import org.step.SpringBootRepo.services.CrudService;
 import org.step.SpringBootRepo.util.DBUtil;
@@ -45,13 +46,17 @@ public class UserServiceImpl implements CrudService<User, Long> {
     @Override
     @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(RuntimeException::new);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException
+                        (String.format("User with id %d was not found", id), id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public User find(User user) {
-        return userRepository.findById(user.getId()).orElseThrow(RuntimeException::new);
+        return userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException
+                        (String.format("User with id %d was not found", user.getId()), user.getId()));
     }
 
     @Override

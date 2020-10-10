@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoException;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.step.SpringBootRepo.entities.Profile;
 import org.step.SpringBootRepo.repositories.ProfileRepository;
@@ -13,7 +14,6 @@ import org.step.SpringBootRepo.services.impl.ProfileServiceImpl;
 import org.step.SpringBootRepo.util.DBUtil;
 
 import java.util.List;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class ProfileServiceTest {
@@ -66,5 +66,25 @@ public class ProfileServiceTest {
         Mockito.verify(profileRepository, Mockito.times(0)).findById(idT);
 
         Assertions.assertThrows(RuntimeException.class, () -> profileService.findById(idT));
+    }
+
+    @Test
+    public void willDeleteProfile() {
+        final long idT = 1L;
+
+        final ProfileServiceImpl spyService = Mockito.spy(profileService);
+
+        Mockito.lenient().doNothing().when(spyService).deleteById(idT);
+    }
+
+    @Test
+    public void willNotDeleteProfile() {
+        final long idT = 1L;
+
+        final ProfileServiceImpl spyService = Mockito.spy(profileService);
+
+        Mockito.doThrow(MockitoException.class).when(spyService).deleteById(idT);
+
+        Assertions.assertThrows(MockitoException.class, () -> spyService.deleteById(idT));
     }
 }
